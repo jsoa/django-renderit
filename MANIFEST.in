@@ -1,0 +1,10 @@
+recursive-include doc_src *
+recursive-include docs *
+
+recursive-include renderit/templates *
+
+recursiv
+
+include LICENSE
+include README
+include *.txt

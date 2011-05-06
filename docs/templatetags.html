@@ -1,0 +1,231 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Template Tags &mdash; django-renderit v0.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="django-renderit v0.1 documentation" href="index.html" />
+    <link rel="next" title="Template Fallback" href="templatefallback.html" />
+    <link rel="prev" title="Getting Started" href="getting_started.html" /> 
+  </head>
+  <body>
+<div id="docstitle">
+	<p>django-renderit v0.1 documentation</p>
+</div>
+<div id="header">
+	<div id="title"><h1>Template Tags</h1></div>
+	<ul id="headerButtons">
+		<li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+		<li id="page_buttons">
+			<div class="headerButton"><a href="genindex.html" title="General Index" accesskey="I">index</a></div>
+			<div class="headerButton"><a href="templatefallback.html" title="Template Fallback" accesskey="N">next</a></div>
+			<div class="headerButton"><a href="getting_started.html" title="Getting Started" accesskey="P">previous</a></div>
+		</li>
+	</ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+	<ul><li class="toctree-l1"><a href="index.html">Main Page</a></li></ul>
+	<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Template Tags</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#renderit">renderit</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="templatefallback.html">Template Fallback</a></li>
+<li class="toctree-l1"><a class="reference internal" href="settings.html">Settings</a></li>
+</ul>
+
+    <div id="searchbox" style="display: none">
+      
+        <form class="search" action="search.html" method="get">
+			<div class="search-wrapper">
+			<span class="search-left"></span>
+			<input class="prettysearch" type="text" name="q" size="18" />
+			<span class="search-right">&nbsp;</span>
+			</div>
+          <input type="submit" value="Search" class="searchbutton" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+        <p class="searchtip" style="font-size: 90%">
+        Enter search terms or a module, class or function name.
+        </p>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="template-tags">
+<span id="templatetags"></span><h1><a class="toc-backref" href="#id1">Template Tags</a><a class="headerlink" href="#template-tags" title="Permalink to this headline">¶</a></h1>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#template-tags" id="id1">Template Tags</a><ul>
+<li><a class="reference internal" href="#renderit" id="id2">renderit</a><ul>
+<li><a class="reference internal" href="#syntax" id="id3">Syntax</a></li>
+<li><a class="reference internal" href="#examples" id="id4">Examples</a></li>
+<li><a class="reference internal" href="#arguments" id="id5">arguments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="renderit">
+<h2><a class="toc-backref" href="#id2">renderit</a><a class="headerlink" href="#renderit" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="syntax">
+<h3><a class="toc-backref" href="#id3">Syntax</a><a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">renderit</span> <span class="o">[</span><span class="nv">object</span><span class="o">]</span> <span class="o">[</span><span class="nv">arg</span><span class="o">]</span> <span class="o">[</span><span class="nv">arg</span><span class="o">]</span> <span class="p">...</span> <span class="o">[</span><span class="k">with</span><span class="o">]</span> <span class="o">[</span><span class="nv">group</span><span class="o">=</span><span class="nv">S</span><span class="o">]</span> <span class="o">[</span><span class="nv">prefix</span><span class="o">=</span><span class="nv">S</span><span class="o">]</span> <span class="o">[</span><span class="nv">concat</span><span class="o">=</span><span class="nv">S</span><span class="o">]</span> <span class="o">[</span><span class="nv">context</span><span class="o">=</span><span class="kp">True</span><span class="o">|</span><span class="nf">False</span><span class="o">]</span> <span class="o">[</span><span class="k">as</span><span class="o">]</span> <span class="o">[</span><span class="nv">varname</span><span class="o">]</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="examples">
+<h3><a class="toc-backref" href="#id4">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<p><strong>Simplest Form</strong>:</p>
+<div class="highlight-django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">renderit</span> <span class="nv">request.user</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<p><strong>Multiple Arguments</strong>:</p>
+<div class="highlight-django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">renderit</span> <span class="nv">request.user</span> <span class="nv">auth</span> <span class="nv">custom</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<p><strong>With Prefix</strong></p>
+<div class="highlight-django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">renderit</span> <span class="nv">request.user</span> <span class="nv">auth</span> <span class="nv">custom</span> <span class="k">with</span> <span class="nv">prefix</span><span class="o">=</span><span class="nv">header</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<p><strong>Change concatination string to be __ (double under score)</strong></p>
+<div class="highlight-django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">renderit</span> <span class="nv">request.user</span> <span class="nv">auth</span> <span class="nv">custom</span> <span class="k">with</span> <span class="nv">prefix</span><span class="o">=</span><span class="nv">header</span> <span class="nv">concat</span><span class="o">=</span><span class="s2">&quot;__&quot;</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="arguments">
+<h3><a class="toc-backref" href="#id5">arguments</a><a class="headerlink" href="#arguments" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="object">
+<h4>object<a class="headerlink" href="#object" title="Permalink to this headline">¶</a></h4>
+<p>Only required argument, can be any python object.</p>
+</div>
+<div class="section" id="args">
+<h4>args<a class="headerlink" href="#args" title="Permalink to this headline">¶</a></h4>
+<p>Anything specified after [object] and before [with] will be treated as extra
+concatination strings. These can also be context variables.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If an object is resolved and contains a space, the argument will be
+slugified, using <tt class="docutils literal"><span class="pre">django.template.defaultfilters.slugify</span></tt></p>
+</div>
+</div>
+<div class="section" id="with">
+<h4>with<a class="headerlink" href="#with" title="Permalink to this headline">¶</a></h4>
+<p>Required only if [group], [prefix] or [concat] is used.</p>
+</div>
+<div class="section" id="group">
+<h4>group<a class="headerlink" href="#group" title="Permalink to this headline">¶</a></h4>
+<p>This value is used to better structure the template location. A folder with
+the supplied value will be preprened to template path.</p>
+<p><strong>Example</strong></p>
+<div class="highlight-django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">renderit</span> <span class="nv">auth.user</span> <span class="k">with</span> <span class="nv">group</span><span class="o">=</span><span class="s1">&#39;users&#39;</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>Template path built:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;/renderit/users/auth_user.html&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="prefix">
+<h4>prefix<a class="headerlink" href="#prefix" title="Permalink to this headline">¶</a></h4>
+<p>Prefixes the template with supplied value.</p>
+<p><strong>Example</strong></p>
+<div class="highlight-django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">renderit</span> <span class="nv">auth.user</span> <span class="k">with</span> <span class="nv">prefix</span><span class="o">=</span><span class="s1">&#39;users&#39;</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>Template path built:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;/renderit/users_auth_user.html&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="concat">
+<h4>concat<a class="headerlink" href="#concat" title="Permalink to this headline">¶</a></h4>
+<p>Change the default concatination string when building templates, default is
+_ (underscore)</p>
+<p><strong>Example</strong></p>
+<div class="highlight-django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">renderit</span> <span class="nv">auth.user</span> <span class="k">with</span> <span class="nv">concat</span><span class="o">=</span><span class="s2">&quot;__&quot;</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>Template path built:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;/renderit/auth__users.html&#39;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The default concatination string can be changed using
+<a class="reference internal" href="settings.html#setting-concatination-string"><em>RENDERIT_CONCATINATION_STRING</em></a></p>
+</div>
+</div>
+<div class="section" id="context">
+<h4>context<a class="headerlink" href="#context" title="Permalink to this headline">¶</a></h4>
+<p>If True (default) the template context will be passed into the template.</p>
+</div>
+<div class="section" id="as">
+<h4>as<a class="headerlink" href="#as" title="Permalink to this headline">¶</a></h4>
+<p>Only required if a return variable is used.</p>
+</div>
+<div class="section" id="varname">
+<h4>varname<a class="headerlink" href="#varname" title="Permalink to this headline">¶</a></h4>
+<p>Store the rendered template into a context varaible.</p>
+<p><strong>Example</strong></p>
+<div class="highlight-django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">renderit</span> <span class="nv">auth.user</span> <span class="k">as</span> <span class="nv">auth_var</span> <span class="cp">%}</span><span class="x"></span>
+
+<span class="cp">{{</span> <span class="nv">auth_var</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2010, jsoares.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+	</p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+	<div id="breadcrumbs">
+		Template Tags
+		</ul>
+	</div>
+	<script type="text/javascript" charset="utf-8" src="_static/toc.js"></script>
+  </body>
+</html>

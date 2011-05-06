@@ -1,0 +1,306 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Getting Started &mdash; django-renderit v0.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="django-renderit v0.1 documentation" href="index.html" />
+    <link rel="next" title="Template Tags" href="templatetags.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+  </head>
+  <body>
+<div id="docstitle">
+	<p>django-renderit v0.1 documentation</p>
+</div>
+<div id="header">
+	<div id="title"><h1>Getting Started</h1></div>
+	<ul id="headerButtons">
+		<li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+		<li id="page_buttons">
+			<div class="headerButton"><a href="genindex.html" title="General Index" accesskey="I">index</a></div>
+			<div class="headerButton"><a href="templatetags.html" title="Template Tags" accesskey="N">next</a></div>
+			<div class="headerButton"><a href="installation.html" title="Installation" accesskey="P">previous</a></div>
+		</li>
+	</ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+	<ul><li class="toctree-l1"><a href="index.html">Main Page</a></li></ul>
+	<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extra-arguments">Extra Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python-objects">Python Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fallback">Fallback</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="templatetags.html">Template Tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="templatefallback.html">Template Fallback</a></li>
+<li class="toctree-l1"><a class="reference internal" href="settings.html">Settings</a></li>
+</ul>
+
+    <div id="searchbox" style="display: none">
+      
+        <form class="search" action="search.html" method="get">
+			<div class="search-wrapper">
+			<span class="search-left"></span>
+			<input class="prettysearch" type="text" name="q" size="18" />
+			<span class="search-right">&nbsp;</span>
+			</div>
+          <input type="submit" value="Search" class="searchbutton" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+        <p class="searchtip" style="font-size: 90%">
+        Enter search terms or a module, class or function name.
+        </p>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="getting-started">
+<span id="id1"></span><h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>The idea here is to take a object and render it based off of its content type.</p>
+<p>django-renderit is one template tag called <tt class="docutils literal"><span class="pre">renderit</span></tt> and it takes
+a bunch of different parameters to determine what template to render.</p>
+<div class="section" id="basic-usage">
+<h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">load</span> <span class="nv">renderit</span> <span class="cp">%}</span><span class="x"></span>
+
+<span class="cp">{%</span> <span class="k">renderit</span> <span class="nv">object</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>This will render <tt class="docutils literal"><span class="pre">object</span></tt> using the default template, which is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;/renderit/default.html&#39;</span>
+</pre></div>
+</div>
+<p>You can then create a template that is object specific, for example, if the
+object is a``auth.user`` instance, it will look for this template:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;/renderit/auth_user.html&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="extra-arguments">
+<h2>Extra Arguments<a class="headerlink" href="#extra-arguments" title="Permalink to this headline">¶</a></h2>
+<p>We can add extra arguments to further make this template unique, for example,
+lets say we want to render the authentication information for websites that
+required logged in users. We would normally have some html on our base
+template, such as</p>
+<div class="highlight-django"><div class="highlight"><pre><span class="x">&lt;html&gt;</span>
+<span class="x">    &lt;head&gt;MySite&lt;/head&gt;</span>
+<span class="x">    &lt;body&gt;</span>
+<span class="x">        &lt;div class=&quot;auth&quot;&gt;</span>
+<span class="x">            Welcome,</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">request.user.is_authenticated</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">                </span><span class="cp">{{</span> <span class="nv">request.user.username</span> <span class="cp">}}</span><span class="x">, &lt;a href=&quot;/profile/&quot;&gt;Profile&lt;/a&gt; &lt;a href=&quot;/logout/&quot;&gt;Logout&lt;/a&gt;</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">else</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">                Guest, &lt;a href=&quot;/login/&quot;&gt;Login&lt;/a&gt; or &lt;a href=&quot;/register/&quot;&gt;Register&lt;/a&gt;</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">        &lt;/div&gt;</span>
+<span class="x">        &lt;div class=&quot;content&quot;&gt;</span>
+<span class="x">            ...</span>
+<span class="x">        &lt;/div&gt;</span>
+<span class="x">    &lt;/body&gt;</span>
+<span class="x">&lt;/html&gt;</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">renderit</span></tt>&#8216;s goal is to take these little blocks of code and seperate them out
+in there own specific, resuable templates, and to clean up the main templates.</p>
+<div class="highlight-django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">load</span> <span class="nv">renderit</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">&lt;html&gt;</span>
+<span class="x">    &lt;head&gt;MySite&lt;/head&gt;</span>
+<span class="x">    &lt;body&gt;</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">renderit</span> <span class="nv">request.user</span> <span class="nv">auth</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">        &lt;div class=&quot;content&quot;&gt;</span>
+<span class="x">            ...</span>
+<span class="x">        &lt;/div&gt;</span>
+<span class="x">    &lt;/body&gt;</span>
+<span class="x">&lt;/html&gt;</span>
+</pre></div>
+</div>
+<p>The above example takes an extra argument <tt class="docutils literal"><span class="pre">auth</span></tt>, this can be a context
+variable or taken literally. If <tt class="docutils literal"><span class="pre">auth</span></tt> not a variable in the template then
+<tt class="docutils literal"><span class="pre">renderit</span></tt> will take is as a string:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;/renderit/auth_user_auth.html&#39;</span>
+</pre></div>
+</div>
+<p>Any arguments specified after the object, will be appended to the end of the
+template name.</p>
+<p>While the above example can be used with django&#8217;s include tag in the same way,
+a better use case would be when your dealing with a list of gerneric objects.</p>
+<p>Lets take the following models:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">DummyEntry</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+    <span class="n">publish_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
+    <span class="n">author</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span>
+
+
+<span class="k">class</span> <span class="nc">DummyBookmark</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">URLField</span><span class="p">()</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">DummyVideo</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">URLField</span><span class="p">()</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">DummyImage</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">URLField</span><span class="p">()</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">RelatedContent</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">entry</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">DummyEntry</span><span class="p">)</span>
+    <span class="n">content_type</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">ContentType</span><span class="p">)</span>
+    <span class="n">object_id</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+    <span class="n">content_object</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">GenericForeignKey</span><span class="p">(</span><span class="s">&#39;content_type&#39;</span><span class="p">,</span> <span class="s">&#39;object_id&#39;</span><span class="p">)</span>
+    <span class="n">add_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Lets create and add the content to a generic list:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">bm_ctype</span> <span class="o">=</span> <span class="n">ContentType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_for_model</span><span class="p">(</span><span class="n">DummyBookmark</span><span class="p">)</span>
+<span class="n">vi_ctype</span> <span class="o">=</span> <span class="n">ContentType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_for_model</span><span class="p">(</span><span class="n">DummyVideo</span><span class="p">)</span>
+<span class="n">im_ctype</span> <span class="o">=</span> <span class="n">ContentType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_for_model</span><span class="p">(</span><span class="n">DummyImage</span><span class="p">)</span>
+<span class="n">en_ctype</span> <span class="o">=</span> <span class="n">ContentType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_for_model</span><span class="p">(</span><span class="n">DummyEntry</span><span class="p">)</span>
+
+
+<span class="n">entry</span> <span class="o">=</span> <span class="n">DummyEntry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s">&quot;This is an example entry&quot;</span><span class="p">,</span>
+    <span class="n">body</span><span class="o">=</span><span class="s">&quot;This is only an example entry&quot;</span><span class="p">,</span>
+    <span class="n">author</span><span class="o">=</span><span class="s">&quot;John Smith&quot;</span><span class="p">)</span>
+
+<span class="n">bm</span> <span class="o">=</span> <span class="n">DummyBookmark</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">url</span><span class="o">=</span><span class="s">&quot;http://google.com&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">&quot;Google&quot;</span><span class="p">)</span>
+
+<span class="n">vid</span> <span class="o">=</span> <span class="n">DummyVideo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">url</span><span class="o">=</span><span class="s">&quot;http://www.youtube.com/watch?v=K24mFGlJij0&amp;playnext=1&amp;list=PL4A64BDBA5F9629AE&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">&quot;Django&#39;s Caravan - Gypsy Jazz Guitar - Leigh Jackson&quot;</span><span class="p">)</span>
+
+<span class="n">img1</span> <span class="o">=</span> <span class="n">DummyImage</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">url</span><span class="o">=</span><span class="s">&quot;http://www.flickr.com/photos/alisonlyons/5678882139/&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">&quot;Fair Exchange From alison lyons photography&quot;</span><span class="p">)</span>
+
+<span class="n">RelatedContent</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">entry</span><span class="o">=</span><span class="n">entry</span><span class="p">,</span>
+    <span class="n">content_type</span><span class="o">=</span><span class="n">bm_ctype</span><span class="p">,</span>
+    <span class="n">object_id</span><span class="o">=</span><span class="n">bm</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span>
+
+<span class="n">RelatedContent</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">entry</span><span class="o">=</span><span class="n">entry</span><span class="p">,</span>
+    <span class="n">content_type</span><span class="o">=</span><span class="n">vi_ctype</span><span class="p">,</span>
+    <span class="n">object_id</span><span class="o">=</span><span class="n">vid</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span>
+
+<span class="n">RelatedContent</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">entry</span><span class="o">=</span><span class="n">entry</span><span class="p">,</span>
+    <span class="n">content_type</span><span class="o">=</span><span class="n">im_ctype</span><span class="p">,</span>
+    <span class="n">object_id</span><span class="o">=</span><span class="n">img</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span>
+
+<span class="n">RelatedContent</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">entry</span><span class="o">=</span><span class="n">entry</span><span class="p">,</span>
+    <span class="n">content_type</span><span class="o">=</span><span class="n">en_ctype</span><span class="p">,</span>
+    <span class="n">object_id</span><span class="o">=</span><span class="n">entry</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span>
+
+<span class="n">related_objects</span> <span class="o">=</span> <span class="n">RelatedContent</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>When related_content is used in your template, there will be 4 different
+types of objects. If we dont want they all to look the same, for example have
+a image show up for <tt class="docutils literal"><span class="pre">DummyImage</span></tt> types or embdeded video
+player for <tt class="docutils literal"><span class="pre">DummyVideo</span></tt> types, the way we can do that is to have a bunch of
+<tt class="docutils literal"><span class="pre">if</span></tt> statements to check the type of object, but thats ugly, and can clutter
+up the template. Enstead <tt class="docutils literal"><span class="pre">renderit</span></tt> will know the type of object you are
+trying to render and use the appropriete template.</p>
+<div class="highlight-django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">for</span> <span class="nv">obj</span> <span class="k">in</span> <span class="nv">related_content</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    </span><span class="cp">{%</span> <span class="k">renderit</span> <span class="nv">obj</span> <span class="cp">%}</span><span class="x"></span>
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>When we output the template list that is created for each item in the loop above,
+it will look something like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="s">u&#39;renderit/sample_app_dummybookmark.html&#39;</span><span class="p">,</span> <span class="s">&#39;renderit/default.html&#39;</span><span class="p">]</span>
+<span class="p">[</span><span class="s">u&#39;renderit/sample_app_dummyvideo.html&#39;</span><span class="p">,</span> <span class="s">&#39;renderit/default.html&#39;</span><span class="p">]</span>
+<span class="p">[</span><span class="s">u&#39;renderit/sample_app_dummyimage.html&#39;</span><span class="p">,</span> <span class="s">&#39;renderit/default.html&#39;</span><span class="p">]</span>
+<span class="p">[</span><span class="s">u&#39;renderit/sample_app_dummyentry.html&#39;</span><span class="p">,</span> <span class="s">&#39;renderit/default.html&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>We can then create the templates and make them custom to the type of object.</p>
+</div>
+<div class="section" id="python-objects">
+<h2>Python Objects<a class="headerlink" href="#python-objects" title="Permalink to this headline">¶</a></h2>
+<p>While the examples shown are specific to django models, we can pass in any object
+and its type will be used (slugified) to build the template. If we have a python
+dictionary, the template will be:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;/renderit/dict.html&#39;</span>
+</pre></div>
+</div>
+<p>Of course this is rather broad, so we should pass in extra arguments to ensure
+its specific to what we use it for</p>
+<div class="highlight-django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">renderit</span> <span class="nv">dict_obj</span> <span class="nv">top10</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>The template that will be looked for first would be:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;/renderit/dict_top10.html&#39;</span>
+</pre></div>
+</div>
+<p>Read more about <a class="reference internal" href="templatetags.html#templatetags"><em>Template Tags</em></a></p>
+</div>
+<div class="section" id="fallback">
+<h2>Fallback<a class="headerlink" href="#fallback" title="Permalink to this headline">¶</a></h2>
+<p>Fallback template paths are generated based on the arguments supplied, which
+the last possbiel template being &#8216;/renderit/default.html&#8217;. Read more about
+<a class="reference internal" href="templatefallback.html#templatefallback"><em>Template Fallback</em></a></p>
+</div>
+</div>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2010, jsoares.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+	</p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+	<div id="breadcrumbs">
+		Getting Started
+		</ul>
+	</div>
+	<script type="text/javascript" charset="utf-8" src="_static/toc.js"></script>
+  </body>
+</html>
