@@ -74,7 +74,7 @@ template, such as
 ``renderit``'s goal is to take these little blocks of code and seperate them out 
 in there own specific, resuable templates, and to clean up the main templates.
 
-.. code-block:: django
+::
 
     {% load renderit %}
     <html>
