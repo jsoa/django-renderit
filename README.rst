@@ -4,7 +4,7 @@ Installation
 
 Installation is easy using ``pip``.
 
-.. code-block:: bash
+::
 
 	pip install django-renderit
 
@@ -29,7 +29,7 @@ a bunch of different parameters to determine what template to render.
 Basic Usage
 ===========
 
-.. code-block:: django
+::
 
 	{% load renderit %}
 	
@@ -52,7 +52,7 @@ lets say we want to render the authentication information for websites that
 required logged in users. We would normally have some html on our base 
 template, such as
 
-.. code-block:: django
+::
 
     <html>
         <head>MySite</head>
@@ -188,7 +188,7 @@ player for ``DummyVideo`` types, the way we can do that is to have a bunch of
 up the template. Enstead ``renderit`` will know the type of object you are 
 trying to render and use the appropriete template.
 
-.. code-block:: django
+::
 
     {% for obj in related_content %}
         {% renderit obj %}
@@ -216,7 +216,7 @@ dictionary, the template will be::
 Of course this is rather broad, so we should pass in extra arguments to ensure 
 its specific to what we use it for
 
-.. code-block:: django
+::
 
     {% renderit dict_obj top10 %}
     
