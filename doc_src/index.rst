@@ -19,7 +19,14 @@ Contents:
    templatetags
    templatefallback
    settings
-   
+
+
+
+Contributing
+============
+
+* `Source <https://github.com/jsoa/django-renderit>`_
+* `Issues <https://github.com/jsoa/django-renderit/issues>`_
 
 
 Indices and tables
