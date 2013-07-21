@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
+
 from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
@@ -37,7 +38,6 @@ class RelatedContent(models.Model):
     object_id = models.IntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
     add_date = models.DateTimeField(default=datetime.datetime.now)
-
 
 
 def get_or_create_example():
