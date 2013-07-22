@@ -119,7 +119,7 @@ class RenderitTemplateTests(TestCase):
     def test_generate_templates_type(self):
         from django.contrib.contenttypes.models import ContentType
         ctype = ContentType.objects.get_for_model(self.entry)
-        type_string = '{}{}{}'.format(ctype.app_label.lower(), '_', ctype.model.lower())
+        type_string = '{0}{1}{2}'.format(ctype.app_label.lower(), '_', ctype.model.lower())
         a = generate_template_list(type_string)
         self.assertEquals(a, [
             'renderit/sample_app_dummyentry.html',
