@@ -1,0 +1,64 @@
+[
+    {
+        "fields": {
+            "author": "Jimmy",
+            "body": "Sample Entry Body #1",
+            "publish_date": "2013-07-16 01:23:23",
+            "title": "Sample Entry #1"
+        },
+        "model": "sample_app.dummyentry",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "author": "Jame",
+            "body": "Sample Entry Body #2",
+            "publish_date": "2013-07-16 01:23:23",
+            "title": "Sample Entry #2"
+        },
+        "model": "sample_app.dummyentry",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "name": "Dummy Bookmark #1"
+        },
+        "model": "sample_app.dummybookmark",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "name": "Dummy Bookmark #2"
+        },
+        "model": "sample_app.dummybookmark",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "name": "Dummy Video #1"
+        },
+        "model": "sample_app.dummyvideo",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "name": "Dummy Video #2"
+        },
+        "model": "sample_app.dummyvideo",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "name": "Dummy Image #1"
+        },
+        "model": "sample_app.dummyimage",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "name": "Dummy Image #2"
+        },
+        "model": "sample_app.dummyimage",
+        "pk": 2
+    }
+]
