@@ -97,7 +97,7 @@ class RenderitTemplateTests(TestCase):
             'dict': {'key': 'val'},
             'list': ['1', 2],
             'tuple': (1, 2),
-            'set': {'set'},
+            'set': set(['set']),
             'bool': True,
             'int': 1,
             'long': 1L,
