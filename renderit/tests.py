@@ -54,7 +54,7 @@ class RenderitTests(TestCase):
                '{% renderit entry a b c with group=grp prefix=pre %}'
         self.assertEqual(
             render(tmpl, {'entry': self.entry}),
-            '{ CONTENT SPECIFIC } Sample Entry #1 (ENTRY)')
+            '{ CONTENT SPECIFIC } FULL')
 
 
 class RenderitTemplateTests(TestCase):
