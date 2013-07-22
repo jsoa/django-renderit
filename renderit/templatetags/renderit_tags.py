@@ -88,39 +88,44 @@ def resolve_variable(value, context, none_on_fail=False):
 
 
 class RenderItNode(Node):
-    def __init__(self, obj, path_args, extra_kwgs, varname):
+    def __init__(self, obj, path_args, kwargs, varname):
         self.obj = obj
         self.path_args = path_args
-        self.extra_kwgs = extra_kwgs
+        self.kwargs = kwargs
         self.varname = varname
 
     def render(self, context):
-
         # resolve the only required argument, obj
         obj = resolve_variable(self.obj, context)
+
+        kwargs = self.kwargs.copy()
+
+        with_context = kwargs.pop('context', 'false')
+        group = kwargs.pop('group', None)
+        prefix = kwargs.pop('prefix', None)
+        concat = kwargs.pop('concat', CONCATINATION_STRING)
+
         path_args = []
-        extra_kwgs = {}
+        extra_context = {}
+
         for arg in self.path_args:
             path_args.append(resolve_variable(arg, context))
 
-        for k, v in self.extra_kwgs.items():
-            if k == 'context':
-                if v.lower() == True:
-                    extra_context = {}
-                    extra_kwgs[k] = True
-                    extra_context.update(context.__dict__)
-                    extra_kwgs['extra_context'] = extra_context
-                else:
-                    extra_kwgs[k] = False
+        if with_context.lower() == 'true':
+            extra_context = context
+        else:
+            extra_context = context.new({})
 
-                continue
-            extra_kwgs[k] = resolve_variable(v, context)
+        # Render the object
+        rendered = render_obj(
+            obj, path_args, group, prefix, concat, extra_context)
 
-        v = render_obj(obj, *path_args, **extra_kwgs)
+        # Store the rendered object in the context if varname was supplied
         if self.varname:
-            context[self.varname] = v
-            return ""
-        return v
+            context[self.varname] = rendered
+            return ''
+
+        return rendered
 
 
 def do_renderit(parser, token):
@@ -147,30 +152,24 @@ def do_renderit(parser, token):
     # the path args are from the object to either 'with', 'as' or
     # length of arguments
     path_args = argv[2: e]
-    # extra args are from 'with' to 'as' or to length of arguments
-    extra_args = argv[e + 1: a]
+    # kwargs are from 'with' to 'as' or to length of arguments
+    kwargs = argv[e + 1: a]
     # the varname is the last element of the list if 'as' is present
     varname = argv[a:] and argv[a + 1] or None
 
-    # split the extra args by '=' and make a doct
-    extra_kwgs = dict([(x.split("=")[0], x.split("=")[1]) for x in \
-                       extra_args if '=' in x])
+    # split the kargs by '=' and make a doct
+    kwargs = dict([(x.split("=")[0], x.split("=")[1]) for x in \
+                   kwargs if '=' in x])
 
-    return RenderItNode(obj, path_args, extra_kwgs, varname)
+    return RenderItNode(obj, path_args, kwargs, varname)
 
 register.tag("renderit", do_renderit)
 
 
-def render_obj(obj, *args, **kwargs):
+def render_obj(obj, args, group, prefix, concat, context):
     """
     Render the content
     """
-    prefix = kwargs.pop("prefix", None)
-    group = kwargs.pop("group", None)
-    concat = kwargs.pop("concat", CONCATINATION_STRING)
-    context = kwargs.pop("context", False)
-    extra_context = kwargs.pop("extra_context", {})
-
     type_str = generate_type_string(obj, concat)
 
     # Generate the template list
@@ -184,9 +183,8 @@ def render_obj(obj, *args, **kwargs):
 
     # Add the context
     ret_context = Context()
+    ret_context.update(context)
     ret_context.update({'obj': obj})
-    if context:
-        ret_context.update(extra_context)
 
     # return the rendered content
     return tmpl.render(ret_context)
