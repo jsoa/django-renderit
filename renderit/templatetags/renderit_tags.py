@@ -103,7 +103,7 @@ class RenderItNode(Node):
         for arg in self.path_args:
             path_args.append(resolve_variable(arg, context))
 
-        for k,v in self.extra_kwgs.items():
+        for k, v in self.extra_kwgs.items():
             if k == 'context':
                 if v.lower() == True:
                     extra_context = {}
@@ -121,6 +121,7 @@ class RenderItNode(Node):
             context[self.varname] = v
             return ""
         return v
+
 
 def do_renderit(parser, token):
     """
@@ -147,12 +148,12 @@ def do_renderit(parser, token):
     # length of arguments
     path_args = argv[2: e]
     # extra args are from 'with' to 'as' or to length of arguments
-    extra_args = argv[e+1: a]
+    extra_args = argv[e + 1: a]
     # the varname is the last element of the list if 'as' is present
-    varname = argv[a:] and argv[a+1] or None
+    varname = argv[a:] and argv[a + 1] or None
 
     # split the extra args by '=' and make a doct
-    extra_kwgs = dict([(x.split("=")[0],x.split("=")[1]) for x in \
+    extra_kwgs = dict([(x.split("=")[0], x.split("=")[1]) for x in \
                        extra_args if '=' in x])
 
     return RenderItNode(obj, path_args, extra_kwgs, varname)
