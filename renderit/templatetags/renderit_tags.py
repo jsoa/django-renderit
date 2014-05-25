@@ -101,7 +101,7 @@ class RenderItNode(Node):
         kwargs = self.kwargs.copy()
 
         # Resolve the extra kwargs
-        with_context = resolve_variable(kwargs.pop('context', 'false'), context)
+        with_context = resolve_variable(kwargs.pop('context', False), context)
         group = resolve_variable(kwargs.pop('group', None), context)
         prefix = resolve_variable(kwargs.pop('prefix', None), context)
         concat = resolve_variable(
@@ -112,6 +112,9 @@ class RenderItNode(Node):
 
         for arg in self.path_args:
             path_args.append(resolve_variable(arg, context))
+
+        if isinstance(with_context, (unicode, )):
+            with_context = with_context.lower() == 'true' and True or False
 
         if with_context:
             extra_context = context
