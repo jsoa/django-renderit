@@ -179,11 +179,72 @@ class RenderitTemplateTests(TestCase):
             'renderit/grp/test_1_2.html',
             'renderit/grp/test_1.html',
             'renderit/grp/test.html',
+
             'renderit/pre_test_1_2.html',
             'renderit/pre_test_1.html',
             'renderit/pre_test.html',
             'renderit/test_1_2.html',
             'renderit/test_1.html',
             'renderit/test.html',
+
+            'renderit/default.html'])
+
+    def test_generate_template_groups(self):
+        groups = generate_template_list(
+            'test', group='a/b')
+
+        self.assertEquals(groups, [
+            'renderit/a/b/test.html',
+            'renderit/a/test.html',
+            'renderit/test.html',
+            'renderit/default.html'
+        ])
+
+    def test_generate_template_args_group(self):
+        groups = generate_template_list(
+            'test', args=['1', '2'], group='a/b')
+
+        self.assertEquals(groups, [
+            'renderit/a/b/test_1_2.html',
+            'renderit/a/b/test_1.html',
+            'renderit/a/b/test.html',
+
+            'renderit/a/test_1_2.html',
+            'renderit/a/test_1.html',
+            'renderit/a/test.html',
+
+            'renderit/test_1_2.html',
+            'renderit/test_1.html',
+            'renderit/test.html',
+
+            'renderit/default.html'
+        ])
+
+    def test_generate_template_args_prefix_group(self):
+        groups = generate_template_list(
+            'test', args=['1', '2'], prefix='pre', group='a/b')
+
+        self.assertEquals(groups, [
+            'renderit/a/b/pre_test_1_2.html',
+            'renderit/a/b/pre_test_1.html',
+            'renderit/a/b/pre_test.html',
+            'renderit/a/b/test_1_2.html',
+            'renderit/a/b/test_1.html',
+            'renderit/a/b/test.html',
+
+            'renderit/a/pre_test_1_2.html',
+            'renderit/a/pre_test_1.html',
+            'renderit/a/pre_test.html',
+            'renderit/a/test_1_2.html',
+            'renderit/a/test_1.html',
+            'renderit/a/test.html',
+
+            'renderit/pre_test_1_2.html',
+            'renderit/pre_test_1.html',
+            'renderit/pre_test.html',
+            'renderit/test_1_2.html',
+            'renderit/test_1.html',
+            'renderit/test.html',
+
             'renderit/default.html'
         ])

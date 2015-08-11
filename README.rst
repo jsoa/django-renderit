@@ -4,6 +4,21 @@
    https://travis-ci.org/jsoa/django-renderit.png?branch=master
 .. _BUILD: https://travis-ci.org/jsoa/django-renderit
 
+
+:Version: 1.1
+:Docs: http://django-renderit.readthedocs.org/en/latest/
+:Download: http://pypi.python.org/pypi/django-formfield/
+:Source: https://github.com/jsoa/django-formfield
+
+==========
+Change Log
+==========
+
+* **1.1**
+  * Group fallback feature
+  * DEBUG setting
+
+
 ============
 Installation
 ============

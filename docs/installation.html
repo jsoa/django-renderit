@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Installation &mdash; django-renderit 1.0 documentation</title>
+    <title>Installation &mdash; django-renderit 1.1 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0',
+        VERSION:     '1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,13 +23,13 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="django-renderit 1.0 documentation" href="index.html" />
+    <link rel="top" title="django-renderit 1.1 documentation" href="index.html" />
     <link rel="next" title="Getting Started" href="getting_started.html" />
     <link rel="prev" title="Welcome to django-renderit’s documentation!" href="index.html" /> 
   </head>
-  <body>
+  <body role="document">
 <div id="docstitle">
-	<p>django-renderit 1.0 documentation</p>
+	<p>django-renderit 1.1 documentation</p>
 </div>
 <div id="header">
 	<div id="title"><h1>Installation</h1></div>
@@ -83,7 +83,7 @@
             
   <div class="section" id="installation">
 <span id="id1"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p>Installation is easy using <tt class="docutils literal"><span class="pre">pip</span></tt> or <tt class="docutils literal"><span class="pre">easy_install</span></tt>.</p>
+<p>Installation is easy using <code class="docutils literal"><span class="pre">pip</span></code> or <code class="docutils literal"><span class="pre">easy_install</span></code>.</p>
 <div class="highlight-bash"><div class="highlight"><pre>pip install django-renderit
 </pre></div>
 </div>
@@ -92,11 +92,12 @@
 </pre></div>
 </div>
 <p>Add renderit to your installed apps:</p>
-<div class="highlight-python"><pre>INSTALLED_APPS = (
+<div class="highlight-python"><div class="highlight"><pre>INSTALLED_APPS = (
         ...
-        'renderit',
+        &#39;renderit&#39;,
         ...
-)</pre>
+)
+</pre></div>
 </div>
 </div>
 
@@ -107,7 +108,7 @@
     <div class="footer">
     <p>
       &copy; Copyright 2010, jsoares.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2b1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.1.
 	</p>
     </div>
       <div class="clearer"></div>

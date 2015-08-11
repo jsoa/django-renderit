@@ -7,7 +7,7 @@ from django.template.loader import select_template
 
 register = Library()
 
-from ..settings import CONCATINATION_STRING, ROOT_TEMPLATE_PATH
+from ..settings import CONCATINATION_STRING, ROOT_TEMPLATE_PATH, DEBUG
 
 
 def generate_type_string(obj, concat=CONCATINATION_STRING):
@@ -53,10 +53,17 @@ def generate_template_list(type_string, args=None, prefix=None, group=None,
     prefix_list = ['%s%s%s' % (prefix, concat, x) for x in \
                    argstr_list if prefix]
 
+    # Split the groups by a slash in the event multiple paths were supplied,
+    # mske sure its reversed as well.
+    split_group = group and group.split('/') or []
+    group_paths = ['/'.join(g) for g in reversed([
+        split_group[:n + 1] for n, a in enumerate(split_group)])]
+
     # Start building the template list starting with group, prefix and args,
     # then just group and args.
-    template_list.extend(['%s/%s' % (group, x) for x in prefix_list if group])
-    template_list.extend(['%s/%s' % (group, x) for x in argstr_list if group])
+    for grp in group_paths:
+        template_list.extend(['%s/%s' % (grp, x) for x in prefix_list])
+        template_list.extend(['%s/%s' % (grp, x) for x in argstr_list])
 
     # Add the prefixed_list and arg_str_list (without group)
     template_list.extend(prefix_list)
@@ -68,6 +75,9 @@ def generate_template_list(type_string, args=None, prefix=None, group=None,
     # Rebuild the template list adding the path and extension
     template_list = ['%s/%s.html' % (
         default_tmpl_path, x) for x in template_list]
+
+    if DEBUG:
+        print 'RENDERIT-DEBUG - Template List: {}'.format(template_list)
 
     return template_list
 

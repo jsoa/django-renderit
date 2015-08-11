@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Getting Started &mdash; django-renderit 1.0 documentation</title>
+    <title>Getting Started &mdash; django-renderit 1.1 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0',
+        VERSION:     '1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,13 +23,13 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="django-renderit 1.0 documentation" href="index.html" />
+    <link rel="top" title="django-renderit 1.1 documentation" href="index.html" />
     <link rel="next" title="Template Tags" href="templatetags.html" />
     <link rel="prev" title="Installation" href="installation.html" /> 
   </head>
-  <body>
+  <body role="document">
 <div id="docstitle">
-	<p>django-renderit 1.0 documentation</p>
+	<p>django-renderit 1.1 documentation</p>
 </div>
 <div id="header">
 	<div id="title"><h1>Getting Started</h1></div>
@@ -90,7 +90,7 @@
   <div class="section" id="getting-started">
 <span id="id1"></span><h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
 <p>The idea here is to take a object and render it based off of its content type.</p>
-<p>django-renderit is one template tag called <tt class="docutils literal"><span class="pre">renderit</span></tt> and it takes
+<p>django-renderit is one template tag called <code class="docutils literal"><span class="pre">renderit</span></code> and it takes
 a bunch of different parameters to determine what template to render.</p>
 <div class="section" id="basic-usage">
 <h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
@@ -99,7 +99,7 @@ a bunch of different parameters to determine what template to render.</p>
 <span class="cp">{%</span> <span class="k">renderit</span> <span class="nv">object</span> <span class="cp">%}</span><span class="x"></span>
 </pre></div>
 </div>
-<p>This will render <tt class="docutils literal"><span class="pre">object</span></tt> using the default template, which is:</p>
+<p>This will render <code class="docutils literal"><span class="pre">object</span></code> using the default template, which is:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;/renderit/default.html&#39;</span>
 </pre></div>
 </div>
@@ -133,7 +133,7 @@ template, such as</p>
 <span class="x">&lt;/html&gt;</span>
 </pre></div>
 </div>
-<p><tt class="docutils literal"><span class="pre">renderit</span></tt>&#8216;s goal is to take these little blocks of code and seperate them out
+<p><code class="docutils literal"><span class="pre">renderit</span></code>&#8216;s goal is to take these little blocks of code and seperate them out
 in there own specific, resuable templates, and to clean up the main templates.</p>
 <div class="highlight-django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">load</span> <span class="nv">renderit</span> <span class="cp">%}</span><span class="x"></span>
 <span class="x">&lt;html&gt;</span>
@@ -147,9 +147,9 @@ in there own specific, resuable templates, and to clean up the main templates.</
 <span class="x">&lt;/html&gt;</span>
 </pre></div>
 </div>
-<p>The above example takes an extra argument <tt class="docutils literal"><span class="pre">auth</span></tt>, this can be a context
-variable or taken literally. If <tt class="docutils literal"><span class="pre">auth</span></tt> not a variable in the template then
-<tt class="docutils literal"><span class="pre">renderit</span></tt> will take is as a string:</p>
+<p>The above example takes an extra argument <code class="docutils literal"><span class="pre">auth</span></code>, this can be a context
+variable or taken literally. If <code class="docutils literal"><span class="pre">auth</span></code> not a variable in the template then
+<code class="docutils literal"><span class="pre">renderit</span></code> will take is as a string:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;/renderit/auth_user_auth.html&#39;</span>
 </pre></div>
 </div>
@@ -240,10 +240,10 @@ a better use case would be when your dealing with a list of gerneric objects.</p
 </div>
 <p>When related_content is used in your template, there will be 4 different
 types of objects. If we dont want they all to look the same, for example have
-a image show up for <tt class="docutils literal"><span class="pre">DummyImage</span></tt> types or embdeded video
-player for <tt class="docutils literal"><span class="pre">DummyVideo</span></tt> types, the way we can do that is to have a bunch of
-<tt class="docutils literal"><span class="pre">if</span></tt> statements to check the type of object, but thats ugly, and can clutter
-up the template. Enstead <tt class="docutils literal"><span class="pre">renderit</span></tt> will know the type of object you are
+a image show up for <code class="docutils literal"><span class="pre">DummyImage</span></code> types or embdeded video
+player for <code class="docutils literal"><span class="pre">DummyVideo</span></code> types, the way we can do that is to have a bunch of
+<code class="docutils literal"><span class="pre">if</span></code> statements to check the type of object, but thats ugly, and can clutter
+up the template. Enstead <code class="docutils literal"><span class="pre">renderit</span></code> will know the type of object you are
 trying to render and use the appropriete template.</p>
 <div class="highlight-django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">for</span> <span class="nv">obj</span> <span class="k">in</span> <span class="nv">related_content</span> <span class="cp">%}</span><span class="x"></span>
 <span class="x">    </span><span class="cp">{%</span> <span class="k">renderit</span> <span class="nv">obj</span> <span class="cp">%}</span><span class="x"></span>
@@ -277,13 +277,13 @@ its specific to what we use it for</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;/renderit/dict_top10.html&#39;</span>
 </pre></div>
 </div>
-<p>Read more about <a class="reference internal" href="templatetags.html#templatetags"><em>Template Tags</em></a></p>
+<p>Read more about <a class="reference internal" href="templatetags.html#templatetags"><span>Template Tags</span></a></p>
 </div>
 <div class="section" id="fallback">
 <h2>Fallback<a class="headerlink" href="#fallback" title="Permalink to this headline">¶</a></h2>
 <p>Fallback template paths are generated based on the arguments supplied, which
 the last possbiel template being &#8216;/renderit/default.html&#8217;. Read more about
-<a class="reference internal" href="templatefallback.html#templatefallback"><em>Template Fallback</em></a></p>
+<a class="reference internal" href="templatefallback.html#templatefallback"><span>Template Fallback</span></a></p>
 </div>
 </div>
 
@@ -294,7 +294,7 @@ the last possbiel template being &#8216;/renderit/default.html&#8217;. Read more
     <div class="footer">
     <p>
       &copy; Copyright 2010, jsoares.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2b1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.1.
 	</p>
     </div>
       <div class="clearer"></div>
