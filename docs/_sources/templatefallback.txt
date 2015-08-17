@@ -171,6 +171,23 @@ prefix **logininfo** and one set without.
     to exist, this is simply a way to fallback to other templates in case a
     template does not exist.
 
+
+With the update to `group` argument to allow a path, the generate list gets
+even larger.
+
+.. code-block:: django
+
+    {% renderit auth.user admins custom with prefix=logininfo group=users/homepage %}
+
+Generated List::
+
+
+    ['/renderit/users/homepage/logininfo_auth_user_admins_custom.html',
+
+     '/renderit/users/logininfo_auth_user_homepage.html',
+     '/renderit/users/logininfo_auth_user.html',
+
+
 The other arguments
 ===================
 

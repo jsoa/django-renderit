@@ -8,7 +8,7 @@
     
     <title>Template Fallback &mdash; django-renderit 1.1 documentation</title>
     
-    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -245,6 +245,18 @@ prefix <strong>logininfo</strong> and one set without.</p>
 <p class="last">This is just the generated template path list, these templates do not have
 to exist, this is simply a way to fallback to other templates in case a
 template does not exist.</p>
+</div>
+<p>With the update to <cite>group</cite> argument to allow a path, the generate list gets
+even larger.</p>
+<div class="highlight-django"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">renderit</span> <span class="nv">auth.user</span> <span class="nv">admins</span> <span class="nv">custom</span> <span class="k">with</span> <span class="nv">prefix</span><span class="o">=</span><span class="nv">logininfo</span> <span class="nv">group</span><span class="o">=</span><span class="nv">users</span><span class="o">/</span><span class="nv">homepage</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>Generated List:</p>
+<div class="highlight-python"><div class="highlight"><pre>[&#39;/renderit/users/homepage/logininfo_auth_user_admins_custom.html&#39;,
+
+ &#39;/renderit/users/logininfo_auth_user_homepage.html&#39;,
+ &#39;/renderit/users/logininfo_auth_user.html&#39;,
+</pre></div>
 </div>
 </div>
 </div>
