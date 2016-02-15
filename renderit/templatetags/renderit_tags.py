@@ -77,7 +77,7 @@ def generate_template_list(type_string, args=None, prefix=None, group=None,
         default_tmpl_path, x) for x in template_list]
 
     if DEBUG:
-        print 'RENDERIT-DEBUG - Template List: {}'.format(template_list)
+        print('RENDERIT-DEBUG - Template List: {}'.format(template_list))
 
     return template_list
 
@@ -123,7 +123,7 @@ class RenderItNode(Node):
         for arg in self.path_args:
             path_args.append(resolve_variable(arg, context))
 
-        if isinstance(with_context, (unicode, )):
+        if isinstance(with_context, (str, )):
             with_context = with_context.lower() == 'true' and True or False
 
         if with_context:
