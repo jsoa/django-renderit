@@ -36,9 +36,17 @@ class RenderitTests(TestCase):
 
         self.assertEqual(
             render(tmpl, ctx),
-            '{ CONTENT SPECIFIC } Sample Entry #1 (ENTRY)')
+            '{ CONTENT SPECIFIC } Sample Entry #1 (ENTRY)\n')
 
+    def test_full_template_tag(self):
+        tmpl = '{% load renderit_tags %}'\
+               '{% renderit entry a b c with group=grp prefix=pre site=False %}'
+        self.assertEqual(
+            render(tmpl, {'entry': self.entry}),
+            '{ CONTENT SPECIFIC } FULL')
 
+    def test_template_tag_with_context(self):
+        ctx = {'entry': self.entry, 'other': 'string'}
         # Allow all the context to flow into the renderit template
         tmpl = '{% load renderit_tags %}'\
                '{% renderit entry context with context=True %}'\
@@ -50,13 +58,13 @@ class RenderitTests(TestCase):
             '\nINNER CONTEXT: string'\
             '\nOUTER CONTEXT: string')
 
-
-    def test_full_template_tag(self):
+    def test_template_tag_with_site(self):
+        ctx = {'entry': self.entry}
         tmpl = '{% load renderit_tags %}'\
-               '{% renderit entry a b c with group=grp prefix=pre site=True %}'
+               '{% renderit entry with site=True %}'
         self.assertEqual(
-            render(tmpl, {'entry': self.entry}),
-            '{ CONTENT SPECIFIC } FULL')
+            render(tmpl, ctx),
+            '{ SITE SPECIFIC } (ENTRY) Sample Entry #1\n')
 
 
 class RenderitTemplateTests(TestCase):

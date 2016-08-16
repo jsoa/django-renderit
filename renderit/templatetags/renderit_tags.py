@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import importlib
+import six
 
 from django.db.models import Model
 from django.template import Library, Node, TemplateSyntaxError, Variable
@@ -159,8 +160,13 @@ class RenderItNode(Node):
         for arg in self.path_args:
             path_args.append(resolve_variable(arg, context))
 
-        if isinstance(with_context, (str, )):
+        # Ensure context is a boolean
+        if isinstance(with_context, (six.string_types, )):
             with_context = with_context.lower() == 'true' and True or False
+
+        # Ensure site is a boolean
+        if isinstance(with_site, (six.string_types, )):
+            with_site = with_site.lower() == 'true' and True or False
 
         if with_context:
             extra_context = context
