@@ -5,15 +5,21 @@
 .. _BUILD: https://travis-ci.org/jsoa/django-renderit
 
 
-:Version: 1.1
+:Version: 1.2
 :Docs: http://django-renderit.readthedocs.org/en/latest/
-:Download: http://pypi.python.org/pypi/django-formfield/
-:Source: https://github.com/jsoa/django-formfield
+:Download: http://pypi.python.org/pypi/django-renderit/
+:Source: https://github.com/jsoa/django-renderit
 
 ==========
 Change Log
 ==========
 
+* **1.2**
+  * Django 1.10, 1.9 and 1.8 compatibility
+  * Python 3.4 and 3.5 compatibility
+  * Drop support for Django < 1.8
+  * Drop support for Python 2.6
+  * Site specific templates
 * **1.1**
   * Group fallback feature
   * DEBUG setting
@@ -250,3 +256,45 @@ Fallback
 
 Fallback template paths are generated based on the arguments supplied, which
 the last possible template being '/renderit/default.html'.
+
+
+Site Specific
+=============
+
+In the event you are using sites, and the templates you need rendered are
+structurally different, you can enable site groups to further distingish
+the templates that are rendered.
+
+This is similar to how groups are parsed, but they fallback to the non-site
+specific templates if not found.
+
+Here is an example of the template difference between site and non-site::
+
+  'renderit/section/sample_app_video.html'
+
+And want to create a site specific template::
+
+  'renderit/1/section/sample_app_video.html'
+
+We need to either specify `site=True` in the template tag or enable sites
+for all templates using the setting `SITE_GROUPS` and setting it to `True`
+
+This differs from groups in that they fallback to the non-site specific
+templates. For example, groups generate a template list like the following::
+
+  ['renderit/<group1>/<group2>/<template_name>',
+   'renderit/<group1>/<template_name>',
+   'renderit/<template_name>']
+
+When sites are enabled for the same scenario produces the following template list::
+
+  ['renderit/<site>/<group1>/<group2>/<template_name>',
+   'renderit/<site>/<group1>/<template_name>',
+   'renderit/<site>/<template_name>',
+   'renderit/<group1>/<group2>/<template_name>',
+   'renderit/<group1>/<template_name>',
+   'renderit/<template_name>']
+
+Key thing to take away from this, is that we can create templates without any
+care for sites initially, which may act as defaults, then we can override
+templates for specific sites.
