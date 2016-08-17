@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from django.conf import settings
 
 RENDERIT_SETTINGS = getattr(settings, 'RENDERIT_SETTINGS', {

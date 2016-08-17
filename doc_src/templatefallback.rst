@@ -112,8 +112,6 @@ Generated List::
      '/renderit/default.html']
 
 
-
-
 The group argument can also be a path i.e. `users/homepage`
 
 *New in version `1.1`*
@@ -130,12 +128,114 @@ Generated List::
      '/renderit/default.html']
 
 
+Site
+----
+
+*New in version `1.2`*
+
+We can group templates by the current `site`. This option can be supplied
+via the template tag as `site=True` or enabled globally using the `SITE_GROUPS`
+setting.
+
+.. code-block:: django
+
+    {% renderit auth.user with site=True %}
+
+Generated List::
+
+    ['/renderit/1/auth_user.html',
+     '/renderit/auth_user.html',
+     '/renderit/default.html']
+
+The example above will automatically apply the site id as part of the group.
+
+.. note::
+
+   While this looks like just another group i.e. `1/a/b`, it acts slightly
+   different when the `site` is reached. Normally when the last group is
+   reached, in this case `1` the template generator would just remove the `1`
+   and try any `prefix` and `arg` combination left, but the site functionality
+   will remove the `1` and then try all the normal groups (anything other than
+   the site) all over again.
+
+Here is an example without sites::
+
+.. code-bloack:: django
+
+    {% renderit test with groups=1/a/b %}
+
+Generated List::
+
+  ['renderit/1/a/b/test.html',
+
+   'renderit/1/a/test.html',
+
+   'renderit/1/test.html',
+
+   'renderit/test.html',
+
+   'renderit/default.html']
+
+Here is an example with sites (notice the removal of `1` in the groups)::
+
+.. code-bloack:: django
+
+    {% renderit test with groups=a/b sites=True %}
+
+Generated List::
+
+  ['renderit/1/a/b/test.html',
+
+  'renderit/1/a/test.html',
+
+  'renderit/1/test.html',
+
+  'renderit/a/b/test.html',
+
+  'renderit/a/test.html',
+
+  'renderit/testhtml',
+
+  'renderit/default.html']
+
+As shown, the site id is used first, but when the site id is removed, it
+will reset the groups with no site id. This gives us the ability to have
+defaults and site overrides.
+
+Site value generation
+^^^^^^^^^^^^^^^^^^^^^
+
+The above examples showed the default value used, the `pk` of the site,
+but this isn't very developer friendly. When `site` ability is enabled
+we can specify a custom site value function which should yield a string.
+The default is `renderit.templatetags.renderit_tags.default_get_site_func`
+
+Change the setting `SITE_GET_FUNC` to a custom function to return something
+more friendly. For example:
+
+.. code-block:: python
+
+    RENDERIT_SETTINGS = {
+         'SITE_GET_FUNC': 'example.sample_app.utils.get_site_name'
+    }
+
+.. code-block:: python
+
+    def get_site_name():
+        site_map = {
+           1: 'white',
+           2: 'black',
+           3: 'red',
+           4: 'blue'
+        }
+        return site_map.get(Site.objects.get_current().pk)
+
 
 Combined
 --------
 
 The list of generated template paths can get rather large when using multiple
-arguments, prefix and group together
+arguments, a prefix and a group together
 
 .. code-block:: django
 
@@ -143,12 +243,12 @@ arguments, prefix and group together
 
 Generated List::
 
-    ['/renderit/users/logininfo_auth_user_homepage_custom.html',
-     '/renderit/users/logininfo_auth_user_homepage.html',
+    ['/renderit/users/logininfo_auth_user_admins_custom.html',
+     '/renderit/users/logininfo_auth_user_admin.html',
      '/renderit/users/logininfo_auth_user.html',
 
-     '/renderit/users/auth_user_homepage_custom.html',
-     '/renderit/users/auth_user_homepage.html',
+     '/renderit/users/logininfo_auth_user_admin_custom.html',
+     '/renderit/users/logininfo_auth_user_homepage.html',
      '/renderit/users/auth_user.html',
 
      '/renderit/logininfo_auth_user_homepage_custom.html',
@@ -183,9 +283,34 @@ Generated List::
 
 
     ['/renderit/users/homepage/logininfo_auth_user_admins_custom.html',
+     '/renderit/users/homepage/logininfo_auth_user_admins.html',
+     '/renderit/users/homepage/logininfo_auth_user.html',
 
-     '/renderit/users/logininfo_auth_user_homepage.html',
+     '/renderit/users/homepage/auth_user_admins_custom.html',
+     '/renderit/users/homepage/auth_user_admins.html',
+     '/renderit/users/homepage/auth_user.html',
+
+     '/renderit/users/logininfo_auth_user_admins_custom.html',
+     '/renderit/users/logininfo_auth_user_admins.html',
      '/renderit/users/logininfo_auth_user.html',
+
+     '/renderit/users/auth_user_admins_custom.html',
+     '/renderit/users/auth_user_admins.html',
+     '/renderit/users/auth_user.html',
+
+     '/renderit/logininfo_auth_user_admins_custom.html',
+     '/renderit/logininfo_auth_user_admins.html',
+     '/renderit/logininfo_auth_user.html',
+
+     '/renderit/auth_user_admins_custom.html',
+     '/renderit/auth_user_admins.html',
+     '/renderit/auth_user.html',
+
+     '/renderit/default.html']
+
+This is similar to the previous example, except that now we have `users/homepage`
+as one set and `users` as another set
+
 
 
 The other arguments
