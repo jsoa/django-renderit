@@ -6,6 +6,12 @@ Settings
 
 All settings are grouped in the `RENDERIT_SETTINGS` dictionary, below are all the possible options
 
+.. note::
+
+   You can also use individual settings by prepending `RENDERIT_` in front of the names below.
+   If you combine both, the individual settings will act as defaults, and the dictionary
+   will override the setting if supplied
+
 .. _setting_concatination_string:
 
 CONCATINATION_STRING
