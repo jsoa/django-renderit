@@ -152,7 +152,7 @@ class RenderItNode(Node):
         prefix = resolve_variable(kwargs.pop('prefix', None), context)
         concat = resolve_variable(
             kwargs.pop('concat', CONCATINATION_STRING), context)
-        with_site = resolve_variable(kwargs.pop('site', None), context)
+        with_site = resolve_variable(kwargs.pop('site', SITE_GROUPS), context)
 
         path_args = []
         extra_context = {}
