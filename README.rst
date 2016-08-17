@@ -15,14 +15,14 @@ Change Log
 ==========
 
 * **1.2**
-  * Django 1.10, 1.9 and 1.8 compatibility
-  * Python 3.4 and 3.5 compatibility
-  * Drop support for Django < 1.8
-  * Drop support for Python 2.6
-  * Site specific templates
+    * Django 1.10, 1.9 and 1.8 compatibility
+    * Python 3.4 and 3.5 compatibility
+    * Drop support for Django < 1.8
+    * Drop support for Python 2.6
+    * Site specific templates
 * **1.1**
-  * Group fallback feature
-  * DEBUG setting
+    * Group fallback feature
+    * DEBUG setting
 
 
 ============
