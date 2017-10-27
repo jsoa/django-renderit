@@ -239,7 +239,7 @@ def render_obj(obj, args, group, prefix, concat, site, context):
         return None
 
     # Add the context
-    ret_context = Context()
+    ret_context = {}
     ret_context.update(context)
     ret_context.update({'obj': obj})
 
