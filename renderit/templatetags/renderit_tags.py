@@ -240,6 +240,13 @@ def render_obj(obj, args, group, prefix, concat, site, context):
 
     # Add the context
     ret_context = {}
+
+    try:
+        # Flatten the context if possible
+        context = context.flatten()
+    except (AttributeError, ):
+        context = context
+
     ret_context.update(context)
     ret_context.update({'obj': obj})
 
