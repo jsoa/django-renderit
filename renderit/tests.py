@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-f
+import six
+
 from django.template import Template, Context
 from django.test import TestCase
 
@@ -34,9 +36,17 @@ class RenderitTests(TestCase):
 
         self.assertEqual(
             render(tmpl, ctx),
-            '{ CONTENT SPECIFIC } Sample Entry #1 (ENTRY)')
+            '{ CONTENT SPECIFIC } Sample Entry #1 (ENTRY)\n')
 
+    def test_full_template_tag(self):
+        tmpl = '{% load renderit_tags %}'\
+               '{% renderit entry a b c with group=grp prefix=pre site=False %}'
+        self.assertEqual(
+            render(tmpl, {'entry': self.entry}),
+            '{ CONTENT SPECIFIC } FULL')
 
+    def test_template_tag_with_context(self):
+        ctx = {'entry': self.entry, 'other': 'string'}
         # Allow all the context to flow into the renderit template
         tmpl = '{% load renderit_tags %}'\
                '{% renderit entry context with context=True %}'\
@@ -48,17 +58,19 @@ class RenderitTests(TestCase):
             '\nINNER CONTEXT: string'\
             '\nOUTER CONTEXT: string')
 
-
-    def test_full_template_tag(self):
+    def test_template_tag_with_site(self):
+        ctx = {'entry': self.entry}
         tmpl = '{% load renderit_tags %}'\
-               '{% renderit entry a b c with group=grp prefix=pre %}'
+               '{% renderit entry with site=True %}'
         self.assertEqual(
-            render(tmpl, {'entry': self.entry}),
-            '{ CONTENT SPECIFIC } FULL')
+            render(tmpl, ctx),
+            '{ SITE SPECIFIC } (ENTRY) Sample Entry #1\n')
 
 
 class RenderitTemplateTests(TestCase):
     fixtures = ['test_data']
+
+    maxDiff = None
 
     def setUp(self):
         from sample_app.models import DummyEntry
@@ -92,7 +104,6 @@ class RenderitTemplateTests(TestCase):
             pass
 
         types = {
-            'unicode': u'unicode',
             'str': 'str',
             'dict': {'key': 'val'},
             'list': ['1', 2],
@@ -100,7 +111,6 @@ class RenderitTemplateTests(TestCase):
             'set': set(['set']),
             'bool': True,
             'int': 1,
-            'long': 1L,
             'float': 1.1,
             'nonetype': None,
             'complex': 1.0j,
@@ -111,6 +121,9 @@ class RenderitTemplateTests(TestCase):
             'sample_app_dummyimage': DummyImage(),
             'modelbase': DummyVideo,
         }
+
+        if six.PY2:
+            types.update({'unicode': u'unicode'})
 
         for ty, va in types.items():
             uc = generate_type_string(va)
@@ -179,11 +192,147 @@ class RenderitTemplateTests(TestCase):
             'renderit/grp/test_1_2.html',
             'renderit/grp/test_1.html',
             'renderit/grp/test.html',
+
             'renderit/pre_test_1_2.html',
             'renderit/pre_test_1.html',
             'renderit/pre_test.html',
             'renderit/test_1_2.html',
             'renderit/test_1.html',
             'renderit/test.html',
+
+            'renderit/default.html'])
+
+    def test_generate_template_groups(self):
+        groups = generate_template_list(
+            'test', group='a/b')
+
+        self.assertEquals(groups, [
+            'renderit/a/b/test.html',
+            'renderit/a/test.html',
+            'renderit/test.html',
             'renderit/default.html'
         ])
+
+    def test_generate_template_sites(self):
+        groups = generate_template_list(
+            'test', site=True
+            )
+
+        self.assertEquals(groups, [
+            'renderit/1/test.html',
+            'renderit/test.html',
+            'renderit/default.html'
+        ])
+
+        groups = generate_template_list(
+            'test', group='a/b', site=True
+            )
+
+        self.assertEquals(groups, [
+            'renderit/1/a/b/test.html',
+            'renderit/1/a/test.html',
+            'renderit/1/test.html',
+            'renderit/a/b/test.html',
+            'renderit/a/test.html',
+            'renderit/test.html',
+            'renderit/default.html'
+            ])
+
+    def test_generate_template_args_group(self):
+        groups = generate_template_list(
+            'test', args=['1', '2'], group='a/b')
+
+        self.assertEquals(groups, [
+            'renderit/a/b/test_1_2.html',
+            'renderit/a/b/test_1.html',
+            'renderit/a/b/test.html',
+
+            'renderit/a/test_1_2.html',
+            'renderit/a/test_1.html',
+            'renderit/a/test.html',
+
+            'renderit/test_1_2.html',
+            'renderit/test_1.html',
+            'renderit/test.html',
+
+            'renderit/default.html'
+        ])
+
+    def test_generate_template_args_prefix_group(self):
+        groups = generate_template_list(
+            'test', args=['1', '2'], prefix='pre', group='a/b')
+
+        self.assertEquals(groups, [
+            'renderit/a/b/pre_test_1_2.html',
+            'renderit/a/b/pre_test_1.html',
+            'renderit/a/b/pre_test.html',
+            'renderit/a/b/test_1_2.html',
+            'renderit/a/b/test_1.html',
+            'renderit/a/b/test.html',
+
+            'renderit/a/pre_test_1_2.html',
+            'renderit/a/pre_test_1.html',
+            'renderit/a/pre_test.html',
+            'renderit/a/test_1_2.html',
+            'renderit/a/test_1.html',
+            'renderit/a/test.html',
+
+            'renderit/pre_test_1_2.html',
+            'renderit/pre_test_1.html',
+            'renderit/pre_test.html',
+            'renderit/test_1_2.html',
+            'renderit/test_1.html',
+            'renderit/test.html',
+
+            'renderit/default.html'
+        ])
+
+    def test_generate_template_args_prefix_group_site(self):
+        groups = generate_template_list(
+            'test', args=['1', '2'], prefix='pre', group='a/b', site=True)
+
+        self.assertEquals(groups, [
+            'renderit/1/a/b/pre_test_1_2.html',
+            'renderit/1/a/b/pre_test_1.html',
+            'renderit/1/a/b/pre_test.html',
+            'renderit/1/a/b/test_1_2.html',
+            'renderit/1/a/b/test_1.html',
+            'renderit/1/a/b/test.html',
+
+            'renderit/1/a/pre_test_1_2.html',
+            'renderit/1/a/pre_test_1.html',
+            'renderit/1/a/pre_test.html',
+            'renderit/1/a/test_1_2.html',
+            'renderit/1/a/test_1.html',
+            'renderit/1/a/test.html',
+
+            'renderit/1/pre_test_1_2.html',
+            'renderit/1/pre_test_1.html',
+            'renderit/1/pre_test.html',
+            'renderit/1/test_1_2.html',
+            'renderit/1/test_1.html',
+            'renderit/1/test.html',
+
+            'renderit/a/b/pre_test_1_2.html',
+            'renderit/a/b/pre_test_1.html',
+            'renderit/a/b/pre_test.html',
+            'renderit/a/b/test_1_2.html',
+            'renderit/a/b/test_1.html',
+            'renderit/a/b/test.html',
+
+            'renderit/a/pre_test_1_2.html',
+            'renderit/a/pre_test_1.html',
+            'renderit/a/pre_test.html',
+            'renderit/a/test_1_2.html',
+            'renderit/a/test_1.html',
+            'renderit/a/test.html',
+
+            'renderit/pre_test_1_2.html',
+            'renderit/pre_test_1.html',
+            'renderit/pre_test.html',
+            'renderit/test_1_2.html',
+            'renderit/test_1.html',
+            'renderit/test.html',
+
+            'renderit/default.html'
+            ])

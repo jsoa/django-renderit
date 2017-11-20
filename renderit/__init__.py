@@ -3,8 +3,8 @@ django-renderit
 """
 __version_info__ = {
     'major': 1,
-    'minor': 0,
-    'micro': 2,
+    'minor': 2,
+    'micro': 0,
     'releaselevel': 'final',
     'serial': 1
 }

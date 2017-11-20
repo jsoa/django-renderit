@@ -15,8 +15,8 @@ Syntax
 ------
 .. code-block:: django
 
-    {% renderit [object] [arg] [arg] ... [with] [group=S] [prefix=S] [concat=S] [context=True|False] [as] [varname] %} 
-    
+    {% renderit [object] [arg] [arg] ... [with] [group=S] [prefix=S] [concat=S] [context=True|False] [site=True|False] [as] [varname] %}
+
 Examples
 --------
 
@@ -25,25 +25,25 @@ Examples
 .. code-block:: django
 
     {% renderit request.user %}
-    
+
 **Multiple Arguments**:
 
 .. code-block:: django
 
     {% renderit request.user auth custom %}
-    
+
 **With Prefix**
 
 .. code-block:: django
 
     {% renderit request.user auth custom with prefix=header %}
-    
+
 **Change concatination string to be __ (double under score)**
 
 .. code-block:: django
 
     {% renderit request.user auth custom with prefix=header concat="__" %}
-    
+
 arguments
 ---------
 
@@ -55,15 +55,15 @@ Only required argument, can be any python object.
 args
 ^^^^
 
-Anything specified after [object] and before [with] will be treated as extra 
+Anything specified after [object] and before [with] will be treated as extra
 concatination strings. These can also be context variables.
 
 
 .. note::
 
-    If an object is resolved and contains a space, the argument will be 
+    If an object is resolved and contains a space, the argument will be
     slugified, using ``django.template.defaultfilters.slugify``
-    
+
 with
 ^^^^
 
@@ -72,7 +72,7 @@ Required only if [group], [prefix] or [concat] is used.
 group
 ^^^^^
 
-This value is used to better structure the template location. A folder with 
+This value is used to better structure the template location. A folder with
 the supplied value will be preprened to template path.
 
 **Example**
@@ -80,7 +80,7 @@ the supplied value will be preprened to template path.
 .. code-block:: django
 
     {% renderit auth.user with group='users' %}
-    
+
 Template path built::
 
     '/renderit/users/auth_user.html'
@@ -95,7 +95,7 @@ Prefixes the template with supplied value.
 .. code-block:: django
 
     {% renderit auth.user with prefix='users' %}
-    
+
 Template path built::
 
     '/renderit/users_auth_user.html'
@@ -103,7 +103,7 @@ Template path built::
 concat
 ^^^^^^
 
-Change the default concatination string when building templates, default is 
+Change the default concatination string when building templates, default is
 _ (underscore)
 
 **Example**
@@ -111,20 +111,31 @@ _ (underscore)
 .. code-block:: django
 
     {% renderit auth.user with concat="__" %}
-    
+
 Template path built::
 
     '/renderit/auth__users.html'
 
 .. note::
 
-    The default concatination string can be changed using 
+    The default concatination string can be changed using
     :ref:`setting_concatination_string`
 
 context
 ^^^^^^^
 
 If True (default) the template context will be passed into the template.
+
+site
+^^^^
+
+If True the site will be used to add additional possible templates on a per site basis
+
+**Example**
+
+.. code-block:: django
+
+    {% renderit auth.user with site=True %}
 
 as
 ^^
@@ -141,8 +152,5 @@ Store the rendered template into a context varaible.
 .. code-block:: django
 
     {% renderit auth.user as auth_var %}
-    
+
     {{ auth_var }}
-    
-
-

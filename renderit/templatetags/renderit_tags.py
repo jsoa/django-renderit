@@ -1,13 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import importlib
+import six
+
 from django.db.models import Model
 from django.template import Library, Node, TemplateSyntaxError, Variable
 from django.template import Context
 from django.template.loader import select_template
 
-register = Library()
+from ..settings import (
+    CONCATINATION_STRING, ROOT_TEMPLATE_PATH, DEBUG, SITE_GET_FUNC,
+    SITE_GROUPS)
 
-from ..settings import CONCATINATION_STRING, ROOT_TEMPLATE_PATH
+register = Library()
 
 
 def generate_type_string(obj, concat=CONCATINATION_STRING):
@@ -16,18 +21,43 @@ def generate_type_string(obj, concat=CONCATINATION_STRING):
     """
     type_str = ""
     if isinstance(obj, Model):
-        type_str = "%s%s%s" % (
-            obj._meta.app_label, concat, obj._meta.module_name)
+        model_name = getattr(obj._meta, 'module_name', getattr(obj._meta, 'model_name'))
+        type_str = "%s%s%s" % (obj._meta.app_label, concat, model_name)
     else:
         type_str = obj.__class__.__name__
 
     return type_str.lower()
 
 
+def get_site():
+    try:
+        mod = SITE_GET_FUNC.split('.')[:-1]
+        func = SITE_GET_FUNC.split('.')[-1]
+        module = importlib.import_module('.'.join(mod))
+        return getattr(module, func)()
+    except (Exception, ):
+        return ''
+
+
+def default_get_site_func():
+    from django.contrib.sites.models import Site
+    site = Site.objects.get_current()
+    return site.id
+
+
+def get_group_paths(group):
+    # Split the groups by a slash in the event multiple paths were supplied,
+    # mske sure its reversed as well.
+    split_group = group and group.split('/') or []
+    return ['/'.join(g) for g in reversed([
+        split_group[:n + 1] for n, a in enumerate(split_group)])]
+
+
 def generate_template_list(type_string, args=None, prefix=None, group=None,
                            concat=CONCATINATION_STRING,
                            default_tmpl='default',
-                           default_tmpl_path=ROOT_TEMPLATE_PATH):
+                           default_tmpl_path=ROOT_TEMPLATE_PATH,
+                           site=SITE_GROUPS):
     """Generate a template list using supplied arguments.
 
     `type_string` - the type of object
@@ -53,10 +83,23 @@ def generate_template_list(type_string, args=None, prefix=None, group=None,
     prefix_list = ['%s%s%s' % (prefix, concat, x) for x in \
                    argstr_list if prefix]
 
+    # Add the site to the group, if possible
+    site_group = None
+    # If site is None, use settings to determine if we sould use site groups
+    # Supplied site var takes priority
+    if site:
+        site_group = '{}{}{}'.format(get_site(), group and '/' or '', group)
+
+    # Generate the group paths (with site and without)
+    group_paths = []
+    group_paths.extend(get_group_paths(site_group))
+    group_paths.extend(get_group_paths(group))
+
     # Start building the template list starting with group, prefix and args,
     # then just group and args.
-    template_list.extend(['%s/%s' % (group, x) for x in prefix_list if group])
-    template_list.extend(['%s/%s' % (group, x) for x in argstr_list if group])
+    for grp in group_paths:
+        template_list.extend(['%s/%s' % (grp, x) for x in prefix_list])
+        template_list.extend(['%s/%s' % (grp, x) for x in argstr_list])
 
     # Add the prefixed_list and arg_str_list (without group)
     template_list.extend(prefix_list)
@@ -68,6 +111,9 @@ def generate_template_list(type_string, args=None, prefix=None, group=None,
     # Rebuild the template list adding the path and extension
     template_list = ['%s/%s.html' % (
         default_tmpl_path, x) for x in template_list]
+
+    if DEBUG:
+        print('RENDERIT-DEBUG - Template List: {}'.format(template_list))
 
     return template_list
 
@@ -106,6 +152,7 @@ class RenderItNode(Node):
         prefix = resolve_variable(kwargs.pop('prefix', None), context)
         concat = resolve_variable(
             kwargs.pop('concat', CONCATINATION_STRING), context)
+        with_site = resolve_variable(kwargs.pop('site', SITE_GROUPS), context)
 
         path_args = []
         extra_context = {}
@@ -113,8 +160,13 @@ class RenderItNode(Node):
         for arg in self.path_args:
             path_args.append(resolve_variable(arg, context))
 
-        if isinstance(with_context, (unicode, )):
+        # Ensure context is a boolean
+        if isinstance(with_context, (six.string_types, )):
             with_context = with_context.lower() == 'true' and True or False
+
+        # Ensure site is a boolean
+        if isinstance(with_site, (six.string_types, )):
+            with_site = with_site.lower() == 'true' and True or False
 
         if with_context:
             extra_context = context
@@ -123,7 +175,7 @@ class RenderItNode(Node):
 
         # Render the object
         rendered = render_obj(
-            obj, path_args, group, prefix, concat, extra_context)
+            obj, path_args, group, prefix, concat, with_site, extra_context)
 
         # Store the rendered object in the context if varname was supplied
         if self.varname:
@@ -135,9 +187,9 @@ class RenderItNode(Node):
 
 def do_renderit(parser, token):
     """
-        {% renderit obj [arg] [arg] .. [with] [group=G] [prefix=P] [concat=C] [context=True|False] [as] [varname] %}
+        {% renderit obj [arg] [arg] .. [with] [group=G] [prefix=P] [concat=C] [context=True|False] [site=True|False|None] [as] [varname] %}
 
-        {% renderit myobj myvar with group=myobj.category prefix=custom context=True %}
+        {% renderit myobj myvar with group=myobj.category prefix=custom context=True site=False %}
     """
     argv = token.contents.split()
     argc = len(argv)
@@ -171,7 +223,7 @@ def do_renderit(parser, token):
 register.tag("renderit", do_renderit)
 
 
-def render_obj(obj, args, group, prefix, concat, context):
+def render_obj(obj, args, group, prefix, concat, site, context):
     """
     Render the content
     """
@@ -179,7 +231,7 @@ def render_obj(obj, args, group, prefix, concat, context):
 
     # Generate the template list
     template_list = generate_template_list(
-        type_str, args, prefix, group, concat=concat)
+        type_str, args, prefix, group, concat=concat, site=site)
 
     # Select the template
     tmpl = select_template(template_list)
@@ -187,7 +239,14 @@ def render_obj(obj, args, group, prefix, concat, context):
         return None
 
     # Add the context
-    ret_context = Context()
+    ret_context = {}
+
+    try:
+        # Flatten the context if possible
+        context = context.flatten()
+    except (AttributeError, ):
+        context = context
+
     ret_context.update(context)
     ret_context.update({'obj': obj})
 
